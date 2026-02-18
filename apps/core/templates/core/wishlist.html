@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .wl-page { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+    .wl-header { font-size: 28px; font-weight: 400; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+    .wl-item { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #eee; }
+    .wl-item img { width: 140px; height: 140px; object-fit: contain; }
+    .wl-item-info { flex: 1; }
+    .wl-item-title { font-size: 16px; margin-bottom: 4px; }
+    .wl-item-title a { color: #007185; text-decoration: none; }
+    .wl-item-title a:hover { color: #c7511f; text-decoration: underline; }
+    .wl-item-price { font-size: 18px; font-weight: 700; margin: 6px 0; }
+    .wl-item-stock { font-size: 13px; margin-bottom: 8px; }
+    .wl-item-stock.in { color: #007600; }
+    .wl-item-stock.out { color: #d32f2f; }
+    .wl-item-actions { display: flex; gap: 10px; align-items: center; }
+    .wl-empty {
+        text-align: center; padding: 80px 20px;
+    }
+    .wl-empty .icon { font-size: 64px; margin-bottom: 16px; }
+    .wl-empty h2 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+    .wl-empty p { color: #555; font-size: 15px; margin-bottom: 20px; }
+</style>
+
+<div class="wl-page">
+    <h1 class="wl-header">Your Wishlist</h1>
+
+    {% if items %}
+    {% for wish in items %}
+    <div class="wl-item">
+        <a href="{% url 'core:product' wish.product.pk %}">
+            {% if wish.product.thumbnail %}
+            <img src="{{ wish.product.thumbnail }}" alt="{{ wish.product.title }}">
+            {% else %}
+            <img src="https://via.placeholder.com/140x140?text=No+Image" alt="{{ wish.product.title }}">
+            {% endif %}
+        </a>
+        <div class="wl-item-info">
+            <div class="wl-item-title"><a href="{% url 'core:product' wish.product.pk %}">{{ wish.product.title }}</a></div>
+            {% if wish.product.brand %}
+            <div style="font-size:13px;color:#555;">by {{ wish.product.brand }}</div>
+            {% endif %}
+            <div class="wl-item-price">${{ wish.product.price }}</div>
+            {% if wish.product.stock > 0 %}
+            <div class="wl-item-stock in">In Stock</div>
+            {% else %}
+            <div class="wl-item-stock out">Out of Stock</div>
+            {% endif %}
+            <div class="wl-item-actions">
+                {% if wish.product.stock > 0 %}
+                <form method="POST" action="{% url 'cart:add' wish.product.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-warning btn-sm">Add to Cart</button>
+                </form>
+                {% endif %}
+                <a href="{% url 'core:toggle_wishlist' wish.product.pk %}" class="btn btn-outline-danger btn-sm">Remove</a>
+            </div>
+            <div style="font-size:12px;color:#999;margin-top:6px;">Added {{ wish.added_at|date:"M j, Y" }}</div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="wl-empty">
+        <div class="icon">💝</div>
+        <h2>Your wishlist is empty</h2>
+        <p>Save items you love by clicking the heart icon on any product page.</p>
+        <a href="{% url 'core:home' %}" class="btn btn-warning">Start Shopping</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

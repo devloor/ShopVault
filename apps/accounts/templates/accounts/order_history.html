@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .oh-page { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+    .oh-breadcrumb { font-size: 13px; margin-bottom: 12px; color: #555; }
+    .oh-breadcrumb a { color: #007185; text-decoration: none; }
+    .oh-breadcrumb a:hover { text-decoration: underline; }
+    .oh-header { font-size: 28px; font-weight: 400; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+    .oh-card {
+        border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin-bottom: 16px;
+    }
+    .oh-card-header {
+        background: #f0f2f2; padding: 12px 20px; display: flex; justify-content: space-between;
+        font-size: 13px; color: #555; flex-wrap: wrap; gap: 8px;
+    }
+    .oh-card-header strong { color: #0F1111; }
+    .oh-card-body { padding: 16px 20px; }
+    .oh-item { display: flex; gap: 14px; margin-bottom: 12px; }
+    .oh-item:last-child { margin-bottom: 0; }
+    .oh-item img { width: 70px; height: 70px; object-fit: contain; border: 1px solid #eee; border-radius: 4px; }
+    .oh-item-info { flex: 1; }
+    .oh-item-title { font-size: 14px; }
+    .oh-item-title a { color: #007185; text-decoration: none; }
+    .oh-item-title a:hover { text-decoration: underline; }
+    .oh-item-meta { font-size: 13px; color: #555; }
+    .oh-empty { text-align: center; padding: 80px 20px; }
+    .oh-empty .icon { font-size: 64px; margin-bottom: 16px; }
+    .oh-empty h2 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+    .oh-empty p { color: #555; font-size: 15px; margin-bottom: 20px; }
+    .pagination-wrap { display: flex; justify-content: center; margin-top: 20px; }
+    .pagination-wrap .page-item.active .page-link { background: #FF9900; border-color: #FF9900; color: #fff; }
+</style>
+
+<div class="oh-page">
+    <div class="oh-breadcrumb">
+        <a href="{% url 'core:home' %}">Home</a> › <a href="{% url 'accounts:dashboard' %}">Your Account</a> › <span>Your Orders</span>
+    </div>
+
+    <h1 class="oh-header">Your Orders</h1>
+
+    {% if orders %}
+    {% for order in orders %}
+    <div class="oh-card">
+        <div class="oh-card-header">
+            <div>
+                <span>ORDER PLACED</span><br>
+                <strong>{{ order.created_at|date:"M j, Y" }}</strong>
+            </div>
+            <div>
+                <span>TOTAL</span><br>
+                <strong>${{ order.total_amount }}</strong>
+            </div>
+            <div>
+                <span>ORDER # {{ order.pk }}</span><br>
+                <a href="{% url 'accounts:order_detail' order.pk %}" style="font-size:13px;">View order details</a>
+            </div>
+            <div>
+                {% if order.status == 'delivered' %}
+                <span class="badge bg-success">Delivered</span>
+                {% elif order.status == 'shipped' %}
+                <span class="badge bg-info">Shipped</span>
+                {% elif order.status == 'processing' %}
+                <span class="badge bg-warning text-dark">Processing</span>
+                {% elif order.status == 'cancelled' %}
+                <span class="badge bg-danger">Cancelled</span>
+                {% else %}
+                <span class="badge bg-secondary">Pending</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="oh-card-body">
+            {% for item in order.items.all %}
+            <div class="oh-item">
+                {% if item.product and item.product.thumbnail %}
+                <img src="{{ item.product.thumbnail }}" alt="{{ item.product_title }}">
+                {% else %}
+                <img src="https://via.placeholder.com/70x70?text=📦" alt="">
+                {% endif %}
+                <div class="oh-item-info">
+                    <div class="oh-item-title">
+                        {% if item.product %}
+                        <a href="{% url 'core:product' item.product.pk %}">{{ item.product_title }}</a>
+                        {% else %}
+                        {{ item.product_title }}
+                        {% endif %}
+                    </div>
+                    <div class="oh-item-meta">${{ item.price }} × {{ item.quantity }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if is_paginated %}
+    <nav class="pagination-wrap">
+        <ul class="pagination">
+            {% if orders.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ orders.previous_page_number }}">‹ Prev</a></li>
+            {% endif %}
+            {% for num in orders.paginator.page_range %}
+                {% if orders.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num > orders.number|add:"-3" and num < orders.number|add:"3" %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if orders.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ orders.next_page_number }}">Next ›</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="oh-empty">
+        <div class="icon">📦</div>
+        <h2>No orders yet</h2>
+        <p>Looks like you haven't placed any orders. Start shopping to see them here!</p>
+        <a href="{% url 'core:home' %}" class="btn btn-warning">Start Shopping</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

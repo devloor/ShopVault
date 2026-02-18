@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .search-page { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    .search-header { margin-bottom: 20px; }
+    .search-header h1 { font-size: 22px; font-weight: 400; color: #0F1111; }
+    .search-header h1 span { font-weight: 700; }
+    .search-meta { font-size: 14px; color: #555; margin-top: 4px; }
+    .search-controls { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .search-controls select {
+        padding: 6px 12px; border: 1px solid #ddd; border-radius: 6px;
+        font-size: 13px; background: #f7f8f8; cursor: pointer;
+    }
+    .search-controls label { font-size: 13px; color: #555; font-weight: 600; }
+    .search-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .s-card {
+        background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 16px;
+        text-align: center; transition: box-shadow .2s;
+    }
+    .s-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+    .s-card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 10px; }
+    .s-card .title {
+        font-size: 14px; color: #007185; margin-bottom: 6px;
+        display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 36px;
+    }
+    .s-card .title a { color: #007185; text-decoration: none; }
+    .s-card .title a:hover { color: #c7511f; text-decoration: underline; }
+    .s-card .stars { color: #de7921; font-size: 13px; }
+    .s-card .price { font-size: 18px; font-weight: 700; margin: 6px 0; }
+    .s-card .brand { font-size: 12px; color: #555; }
+    .empty-search {
+        text-align: center; padding: 80px 20px;
+    }
+    .empty-search .icon { font-size: 64px; margin-bottom: 16px; }
+    .empty-search h2 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+    .empty-search p { color: #555; font-size: 15px; margin-bottom: 20px; }
+    .pagination-wrap { display: flex; justify-content: center; margin-top: 30px; }
+    .pagination-wrap .page-link { color: #0F1111; }
+    .pagination-wrap .page-item.active .page-link { background: #FF9900; border-color: #FF9900; color: #fff; }
+</style>
+
+<div class="search-page">
+    <div class="search-header">
+        {% if query %}
+        <h1>Results for "<span>{{ query }}</span>"</h1>
+        <div class="search-meta">{{ result_count }} result{{ result_count|pluralize }} found</div>
+        {% else %}
+        <h1>All Products</h1>
+        <div class="search-meta">{{ result_count }} product{{ result_count|pluralize }}</div>
+        {% endif %}
+    </div>
+
+    {% if products %}
+    <div class="search-controls">
+        <label>Sort by:</label>
+        <select onchange="window.location.href=this.value">
+            <option value="?q={{ query }}&cat={{ selected_category }}&sort=relevance" {% if selected_sort == 'relevance' %}selected{% endif %}>Relevance</option>
+            <option value="?q={{ query }}&cat={{ selected_category }}&sort=price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="?q={{ query }}&cat={{ selected_category }}&sort=price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+            <option value="?q={{ query }}&cat={{ selected_category }}&sort=rating" {% if selected_sort == 'rating' %}selected{% endif %}>Avg. Customer Review</option>
+            <option value="?q={{ query }}&cat={{ selected_category }}&sort=newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+        </select>
+
+        <label>Category:</label>
+        <select onchange="window.location.href=this.value">
+            <option value="?q={{ query }}&sort={{ selected_sort }}">All Categories</option>
+            {% for cat in categories %}
+            <option value="?q={{ query }}&cat={{ cat.slug }}&sort={{ selected_sort }}" {% if selected_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="search-grid">
+        {% for product in products %}
+        <div class="s-card">
+            <a href="{% url 'core:product' product.pk %}">
+                {% if product.thumbnail %}
+                <img src="{{ product.thumbnail }}" alt="{{ product.title }}">
+                {% else %}
+                <img src="https://via.placeholder.com/200x180?text=No+Image" alt="{{ product.title }}">
+                {% endif %}
+            </a>
+            <div class="title"><a href="{% url 'core:product' product.pk %}">{{ product.title }}</a></div>
+            {% if product.brand %}
+            <div class="brand">by {{ product.brand }}</div>
+            {% endif %}
+            <div class="stars">
+                {% for s in "12345" %}{% if forloop.counter <= product.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+                <small style="color:#555;">{{ product.rating }}</small>
+            </div>
+            <div class="price">${{ product.price }}</div>
+            <form method="POST" action="{% url 'cart:add' product.pk %}" class="mt-1">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn-warning btn-sm w-100">Add to Cart</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav class="pagination-wrap">
+        <ul class="pagination">
+            {% if products.has_previous %}
+            <li class="page-item"><a class="page-link" href="?q={{ query }}&cat={{ selected_category }}&sort={{ selected_sort }}&page={{ products.previous_page_number }}">‹ Prev</a></li>
+            {% endif %}
+            {% for num in products.paginator.page_range %}
+                {% if products.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num > products.number|add:"-3" and num < products.number|add:"3" %}
+                <li class="page-item"><a class="page-link" href="?q={{ query }}&cat={{ selected_category }}&sort={{ selected_sort }}&page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+            <li class="page-item"><a class="page-link" href="?q={{ query }}&cat={{ selected_category }}&sort={{ selected_sort }}&page={{ products.next_page_number }}">Next ›</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-search">
+        <div class="icon">🔍</div>
+        <h2>No results found</h2>
+        {% if query %}
+        <p>We couldn't find anything matching "{{ query }}". Try different keywords or browse categories.</p>
+        {% else %}
+        <p>Try searching for a product name, brand, or keyword.</p>
+        {% endif %}
+        <a href="{% url 'core:home' %}" class="btn btn-warning">Continue Shopping</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

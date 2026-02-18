@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* ===== HERO ===== */
+    .sv-hero { position: relative; background: #232f3e; }
+    .sv-hero .carousel-item { height: 500px; }
+    .sv-hero .carousel-item img { height: 500px; object-fit: cover; }
+    .sv-hero-fade {
+        position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+        background: linear-gradient(to bottom, transparent, #eaeded);
+        z-index: 1; pointer-events: none;
+    }
+
+    /* ===== CATEGORY GRID ===== */
+    .sv-grid { position: relative; z-index: 2; margin-top: -280px; padding: 0 20px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+    .sv-card {
+        background: #fff; padding: 20px; height: 100%;
+        display: flex; flex-direction: column; border-radius: 0;
+    }
+    .sv-card h3 { font-size: 20px; font-weight: 700; color: #0F1111; margin-bottom: 12px; }
+    .sv-card-img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex: 1; }
+    .sv-card-img-grid a { display: block; }
+    .sv-card-img-grid img {
+        width: 100%; height: 130px; object-fit: cover; border-radius: 4px;
+        transition: opacity .2s;
+    }
+    .sv-card-img-grid img:hover { opacity: .85; }
+    .sv-card-img-grid .caption { font-size: 12px; color: #0F1111; line-height: 1.3; margin-top: 2px; }
+    .sv-card-single img { width: 100%; height: 275px; object-fit: cover; margin-bottom: 10px; border-radius: 4px; }
+    .sv-card-link { font-size: 13px; color: #007185; text-decoration: none; margin-top: auto; padding-top: 10px; }
+    .sv-card-link:hover { color: #c7511f; text-decoration: underline; }
+
+    /* ===== PRODUCT ROWS ===== */
+    .sv-products { background: #fff; padding: 20px; margin: 20px auto; max-width: 1400px; }
+    .sv-products h3 { font-size: 21px; font-weight: 700; color: #0F1111; margin-bottom: 4px; }
+    .sv-prod { text-align: center; padding: 10px; }
+    .sv-prod img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 8px; cursor: pointer; }
+    .sv-prod-title {
+        font-size: 13px; color: #0F1111;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .sv-prod-title a { color: inherit; text-decoration: none; }
+    .sv-prod-title a:hover { color: #c7511f; }
+    .sv-prod-stars { color: #de7921; font-size: 14px; }
+    .sv-prod-price { font-size: 16px; font-weight: 700; color: #0F1111; }
+    .sv-prod .btn-warning { font-size: 12px; border-radius: 20px; }
+
+    /* ===== FOOTER ===== */
+    .sv-footer-top { background: #37475a; text-align: center; padding: 14px; }
+    .sv-footer-top a { color: #fff; text-decoration: none; font-size: 13px; }
+    .sv-footer-top a:hover { text-decoration: underline; }
+    .sv-footer {
+        background: #232f3e; color: #ddd; padding: 40px 20px 20px;
+    }
+    .sv-footer-inner { max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between; }
+    .sv-footer-col h4 { color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .sv-footer-col a { display: block; color: #ddd; text-decoration: none; font-size: 13px; line-height: 2; }
+    .sv-footer-col a:hover { color: #fff; text-decoration: underline; }
+    .sv-footer-bottom {
+        background: #131921; color: #999; text-align: center;
+        padding: 16px; font-size: 12px;
+    }
+    .sv-footer-bottom a { color: #ddd; text-decoration: none; margin: 0 8px; }
+
+    @media (max-width: 768px) {
+        .sv-hero .carousel-item, .sv-hero .carousel-item img { height: 280px; }
+        .sv-grid { margin-top: -120px; }
+        .sv-card-img-grid img { height: 90px; }
+    }
+</style>
+
+<!-- ====== HERO CAROUSEL ====== -->
+<div class="sv-hero">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1500&h=500&fit=crop" class="d-block w-100" alt="Shop Deals">
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1500&h=500&fit=crop" class="d-block w-100" alt="Electronics">
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1500&h=500&fit=crop" class="d-block w-100" alt="Fashion">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+        <div class="sv-hero-fade"></div>
+    </div>
+</div>
+
+<!-- ====== CATEGORY CARDS ====== -->
+<div class="sv-grid">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
+        {% for cat in categories %}
+        <div class="col">
+            <div class="sv-card">
+                <h3>{{ cat.name }}</h3>
+                {% with cat.products.all|slice:":4" as prods %}
+                {% if prods|length >= 4 %}
+                <div class="sv-card-img-grid">
+                    {% for p in prods %}
+                    <div>
+                        <a href="{% url 'core:product' p.pk %}">
+                            <img src="{{ p.thumbnail|default:'https://via.placeholder.com/150' }}" alt="{{ p.title }}">
+                        </a>
+                        <div class="caption">{{ p.title|truncatechars:22 }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="sv-card-single">
+                    {% with cat.products.first as fp %}
+                    {% if fp and fp.thumbnail %}
+                    <img src="{{ fp.thumbnail }}" alt="{{ cat.name }}">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=275&fit=crop" alt="{{ cat.name }}">
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                {% endif %}
+                {% endwith %}
+                <a href="{% url 'core:category' cat.slug %}" class="sv-card-link">See more</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ====== TOP RATED ====== -->
+<div class="sv-products" style="margin-top:30px;">
+    <h3>Top Rated Products</h3>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3 mt-1">
+        {% for product in featured_products %}
+        <div class="col">
+            <div class="sv-prod">
+                <a href="{% url 'core:product' product.pk %}">
+                    <img src="{{ product.thumbnail|default:'https://via.placeholder.com/200' }}" alt="{{ product.title }}">
+                </a>
+                <div class="sv-prod-title"><a href="{% url 'core:product' product.pk %}">{{ product.title }}</a></div>
+                <div class="sv-prod-stars">
+                    {% for s in "12345" %}{% if forloop.counter <= product.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+                    <small style="color:#555;">{{ product.rating }}</small>
+                </div>
+                <div class="sv-prod-price">${{ product.price }}</div>
+                <form method="POST" action="{% url 'cart:add' product.pk %}" class="mt-1">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-warning btn-sm w-100">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12"><p class="text-muted">No products yet.</p></div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ====== NEW ARRIVALS ====== -->
+{% if latest_products %}
+<div class="sv-products">
+    <h3>New Arrivals</h3>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3 mt-1">
+        {% for product in latest_products %}
+        <div class="col">
+            <div class="sv-prod">
+                <a href="{% url 'core:product' product.pk %}">
+                    <img src="{{ product.thumbnail|default:'https://via.placeholder.com/200' }}" alt="{{ product.title }}">
+                </a>
+                <div class="sv-prod-title"><a href="{% url 'core:product' product.pk %}">{{ product.title }}</a></div>
+                <div class="sv-prod-stars">
+                    {% for s in "12345" %}{% if forloop.counter <= product.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+                    <small style="color:#555;">{{ product.rating }}</small>
+                </div>
+                <div class="sv-prod-price">${{ product.price }}</div>
+                <form method="POST" action="{% url 'cart:add' product.pk %}" class="mt-1">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-warning btn-sm w-100">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- ====== FOOTER ====== -->
+<div class="sv-footer-top">
+    <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top</a>
+</div>
+<footer class="sv-footer">
+    <div class="sv-footer-inner">
+        <div class="sv-footer-col">
+            <h4>Get to Know Us</h4>
+            <a href="{% url 'core:about' %}">About ShopVault</a>
+            <a href="{% url 'core:careers' %}">Careers</a>
+            <a href="{% url 'core:sell' %}">Sell on ShopVault</a>
+            <a href="{% url 'core:advertise' %}">Advertise</a>
+        </div>
+        <div class="sv-footer-col">
+            <h4>Make Money with Us</h4>
+            <a href="{% url 'core:sell' %}">Sell Products</a>
+            <a href="{% url 'core:advertise' %}">Advertise Your Products</a>
+            <a href="{% url 'core:gift_cards' %}">Gift Cards</a>
+        </div>
+        <div class="sv-footer-col">
+            <h4>Shop With Us</h4>
+            <a href="{% url 'core:deals' %}">Today's Deals</a>
+            <a href="{% url 'core:gift_cards' %}">Gift Cards</a>
+            <a href="{% url 'cart:cart' %}">Your Cart</a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'accounts:dashboard' %}">Your Account</a>
+            {% else %}
+            <a href="{% url 'accounts:register' %}">Create Account</a>
+            {% endif %}
+        </div>
+        <div class="sv-footer-col">
+            <h4>Let Us Help You</h4>
+            <a href="{% url 'core:customer_service' %}">Customer Service</a>
+            <a href="{% url 'core:customer_service' %}">Returns & Refunds</a>
+            <a href="{% url 'core:privacy' %}">Privacy Notice</a>
+            <a href="{% url 'core:conditions' %}">Conditions of Use</a>
+        </div>
+    </div>
+</footer>
+<div class="sv-footer-bottom">
+    <div style="margin-bottom:8px;">
+        <a href="{% url 'core:conditions' %}">Conditions of Use</a>
+        <a href="{% url 'core:privacy' %}">Privacy Notice</a>
+        <a href="{% url 'core:customer_service' %}">Help</a>
+    </div>
+    &copy; 2026 ShopVault. All rights reserved.
+</div>
+{% endblock %}

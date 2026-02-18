@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .product-detail { max-width: 1100px; margin: 30px auto; padding: 0 15px; }
+    .pd-image { width: 100%; max-height: 450px; object-fit: contain; background: #fff; padding: 20px; border: 1px solid #eee; border-radius: 8px; }
+    .pd-title { font-size: 24px; font-weight: 400; line-height: 1.3; }
+    .pd-brand { font-size: 14px; color: #007185; margin-bottom: 8px; }
+    .pd-rating { color: #de7921; font-size: 16px; margin-bottom: 8px; }
+    .pd-price { font-size: 28px; font-weight: 400; color: #0F1111; margin-bottom: 15px; }
+    .pd-price .price-symbol { font-size: 14px; vertical-align: top; }
+    .pd-stock { font-size: 18px; margin-bottom: 15px; }
+    .pd-stock.in-stock { color: #007600; }
+    .pd-stock.out-of-stock { color: #d32f2f; }
+    .pd-description { font-size: 14px; color: #333; line-height: 1.6; margin-top: 20px; }
+    .pd-description h5 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .pd-category { font-size: 13px; color: #555; margin-bottom: 8px; }
+    .related-section { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+    .related-section h4 { margin-bottom: 15px; }
+    .related-card { text-align: center; padding: 10px; }
+    .related-card img { width: 100%; height: 150px; object-fit: contain; margin-bottom: 8px; }
+    .related-card .r-title { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .related-card .r-title a { color: #007185; text-decoration: none; }
+    .related-card .r-title a:hover { color: #c7511f; text-decoration: underline; }
+    .related-card .r-price { font-weight: 700; font-size: 15px; }
+
+    /* Breadcrumbs */
+    .pd-breadcrumb { font-size: 13px; margin-bottom: 16px; color: #555; }
+    .pd-breadcrumb a { color: #007185; text-decoration: none; }
+    .pd-breadcrumb a:hover { text-decoration: underline; }
+    .pd-breadcrumb .sep { margin: 0 6px; color: #999; }
+
+    /* Wishlist button */
+    .wish-btn {
+        display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+        border: 1px solid #ddd; border-radius: 20px; background: #fff;
+        cursor: pointer; font-size: 14px; color: #555; transition: all .2s;
+        text-decoration: none; margin-top: 10px;
+    }
+    .wish-btn:hover { border-color: #FF9900; color: #FF9900; }
+    .wish-btn.active { color: #d32f2f; border-color: #d32f2f; }
+
+    /* Reviews */
+    .reviews-section { margin-top: 40px; padding-top: 25px; border-top: 1px solid #eee; }
+    .reviews-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    .reviews-header h4 { margin: 0; }
+    .review-summary { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #555; }
+    .review-summary .stars { color: #de7921; font-size: 18px; }
+    .review-card {
+        padding: 16px 0; border-bottom: 1px solid #f0f0f0;
+    }
+    .review-card:last-child { border-bottom: none; }
+    .review-user { font-size: 13px; color: #555; margin-bottom: 4px; }
+    .review-stars { color: #de7921; font-size: 14px; }
+    .review-title { font-weight: 700; font-size: 15px; margin: 4px 0; }
+    .review-date { font-size: 12px; color: #999; margin-bottom: 6px; }
+    .review-text { font-size: 14px; color: #333; line-height: 1.5; }
+    .review-form-box {
+        background: #f9f9f9; border: 1px solid #eee; border-radius: 8px;
+        padding: 20px; margin-top: 20px;
+    }
+    .review-form-box h5 { margin-bottom: 15px; }
+    .star-input { display: flex; gap: 4px; margin-bottom: 12px; }
+    .star-input label { font-size: 28px; color: #ddd; cursor: pointer; transition: color .15s; }
+    .star-input input { display: none; }
+    .star-input label:hover, .star-input label:hover ~ label { color: #de7921; }
+    .star-input input:checked ~ label { color: #de7921; }
+    .no-reviews { text-align: center; padding: 30px; color: #999; font-size: 15px; }
+</style>
+
+<div class="product-detail">
+    <!-- Breadcrumbs -->
+    <div class="pd-breadcrumb">
+        <a href="{% url 'core:home' %}">Home</a>
+        <span class="sep">›</span>
+        {% if product.category %}
+        <a href="{% url 'core:category' product.category.slug %}">{{ product.category.name }}</a>
+        <span class="sep">›</span>
+        {% endif %}
+        <span>{{ product.title|truncatechars:60 }}</span>
+    </div>
+
+    <div class="row">
+        <!-- Product Image -->
+        <div class="col-md-5">
+            {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.title }}" class="pd-image">
+            {% elif product.thumbnail %}
+                <img src="{{ product.thumbnail }}" alt="{{ product.title }}" class="pd-image">
+            {% else %}
+                <img src="https://via.placeholder.com/450x450?text=No+Image" alt="{{ product.title }}" class="pd-image">
+            {% endif %}
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-4">
+            <h1 class="pd-title">{{ product.title }}</h1>
+
+            {% if product.brand %}
+            <div class="pd-brand">by {{ product.brand }}</div>
+            {% endif %}
+
+            {% if product.category %}
+            <div class="pd-category">in <a href="{% url 'core:category' product.category.slug %}" style="color:#007185;text-decoration:none;">{{ product.category.name }}</a></div>
+            {% endif %}
+
+            <div class="pd-rating">
+                {% for star in "12345" %}
+                    {% if forloop.counter <= product.rating %}&#9733;{% else %}&#9734;{% endif %}
+                {% endfor %}
+                <small style="color:#555;">
+                    {{ product.rating }} out of 5
+                    {% if review_stats.count %}· {{ review_stats.count }} review{{ review_stats.count|pluralize }}{% endif %}
+                </small>
+            </div>
+
+            <div class="pd-description">
+                <h5>About this item</h5>
+                <p>{{ product.description }}</p>
+            </div>
+        </div>
+
+        <!-- Buy Box -->
+        <div class="col-md-3">
+            <div style="border:1px solid #ddd; border-radius:8px; padding:20px;">
+                <div class="pd-price">
+                    <span class="price-symbol">$</span>{{ product.price }}
+                </div>
+
+                {% if product.stock > 0 %}
+                <div class="pd-stock in-stock">In Stock</div>
+                {% else %}
+                <div class="pd-stock out-of-stock">Currently unavailable</div>
+                {% endif %}
+
+                {% if product.stock > 0 %}
+                <form method="POST" action="{% url 'cart:add' product.pk %}">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label for="qty" class="form-label" style="font-size:13px;">Quantity:</label>
+                        <select name="quantity" id="qty" class="form-select form-select-sm" style="width:80px;">
+                            {% for q in "123456789" %}
+                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100 mb-2">Add to Cart</button>
+                </form>
+                {% endif %}
+
+                <!-- Wishlist -->
+                {% if user.is_authenticated %}
+                <form method="POST" action="{% url 'core:toggle_wishlist' product.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="wish-btn {% if in_wishlist %}active{% endif %}">
+                        {% if in_wishlist %}♥ In Wishlist{% else %}♡ Add to Wishlist{% endif %}
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section">
+        <div class="reviews-header">
+            <h4>Customer Reviews</h4>
+            {% if review_stats.count %}
+            <div class="review-summary">
+                <span class="stars">
+                    {% for s in "12345" %}{% if forloop.counter <= review_stats.avg %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+                </span>
+                {{ review_stats.avg|floatformat:1 }} out of 5 · {{ review_stats.count }} rating{{ review_stats.count|pluralize }}
+            </div>
+            {% endif %}
+        </div>
+
+        {% if reviews %}
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-user">
+                <strong>{{ review.user.username }}</strong>
+                {% if review.user == user %}
+                <form method="POST" action="{% url 'core:delete_review' review.pk %}" style="display:inline;" onsubmit="return confirm('Delete your review?')">
+                    {% csrf_token %}
+                    <button type="submit" style="font-size:12px;color:#d32f2f;margin-left:8px;background:none;border:none;cursor:pointer;text-decoration:underline;">Delete</button>
+                </form>
+                {% endif %}
+            </div>
+            <div class="review-stars">
+                {% for s in "12345" %}{% if forloop.counter <= review.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+                {% if review.title %}<strong style="color:#0F1111;margin-left:6px;">{{ review.title }}</strong>{% endif %}
+            </div>
+            <div class="review-date">Reviewed on {{ review.created_at|date:"F j, Y" }}</div>
+            {% if review.comment %}
+            <div class="review-text">{{ review.comment }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-reviews">No reviews yet. Be the first to share your thoughts!</div>
+        {% endif %}
+
+        <!-- Review Form -->
+        {% if user.is_authenticated and not user_has_reviewed %}
+        <div class="review-form-box">
+            <h5>Write a Review</h5>
+            <form method="POST" action="{% url 'core:add_review' product.pk %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label" style="font-size:13px;font-weight:600;">Your Rating</label>
+                    <div class="star-input" id="star-input">
+                        {% for i in "54321" %}
+                        <span>
+                            <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}" {% if i == "5" %}checked{% endif %}>
+                            <label for="star{{ i }}" data-value="{{ i }}">&#9733;</label>
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="review_title" class="form-label" style="font-size:13px;font-weight:600;">Headline</label>
+                    <input type="text" name="review_title" id="review_title" class="form-control" placeholder="What's most important to know?" maxlength="200">
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label" style="font-size:13px;font-weight:600;">Your Review</label>
+                    <textarea name="comment" id="comment" class="form-control" rows="4" placeholder="What did you like or dislike?" maxlength="2000"></textarea>
+                </div>
+                <button type="submit" class="btn btn-warning">Submit Review</button>
+            </form>
+        </div>
+        {% elif not user.is_authenticated %}
+        <div class="review-form-box" style="text-align:center;">
+            <p style="margin-bottom:10px;">Sign in to write a review</p>
+            <a href="{% url 'accounts:login' %}?next={% url 'core:product' product.pk %}" class="btn btn-warning">Sign In</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="related-section">
+        <h4>Customers who viewed this also viewed</h4>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            {% for rp in related_products %}
+            <div class="col">
+                <div class="related-card">
+                    {% if rp.thumbnail %}
+                        <img src="{{ rp.thumbnail }}" alt="{{ rp.title }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/150x150?text=No+Image" alt="{{ rp.title }}">
+                    {% endif %}
+                    <div class="r-title"><a href="{% url 'core:product' rp.pk %}">{{ rp.title }}</a></div>
+                    <div class="r-price">${{ rp.price }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="mt-4 mb-5">
+        {% if product.category %}
+        <a href="{% url 'core:category' product.category.slug %}" class="btn btn-outline-secondary">&larr; Back to {{ product.category.name }}</a>
+        {% else %}
+        <a href="{% url 'core:home' %}" class="btn btn-outline-secondary">&larr; Back to Home</a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Star rating hover/select
+(function() {
+    const container = document.getElementById('star-input');
+    if (!container) return;
+    const labels = container.querySelectorAll('label');
+    labels.forEach(function(label) {
+        label.addEventListener('mouseenter', function() {
+            const val = parseInt(this.dataset.value);
+            labels.forEach(function(l) {
+                l.style.color = parseInt(l.dataset.value) <= val ? '#de7921' : '#ddd';
+            });
+        });
+    });
+    container.addEventListener('mouseleave', function() {
+        const checked = container.querySelector('input:checked');
+        const checkedVal = checked ? parseInt(checked.value) : 0;
+        labels.forEach(function(l) {
+            l.style.color = parseInt(l.dataset.value) <= checkedVal ? '#de7921' : '#ddd';
+        });
+    });
+})();
+</script>
+{% endblock %}

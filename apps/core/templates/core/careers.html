@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .careers-page { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+    .careers-hero {
+        background: linear-gradient(135deg, #131921, #232f3e);
+        border-radius: 12px; padding: 60px 40px; text-align: center; color: #fff; margin-bottom: 40px;
+    }
+    .careers-hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+    .careers-hero p { color: #ccc; font-size: 16px; max-width: 550px; margin: 0 auto 20px; }
+    .careers-hero .btn { background: #FF9900; color: #131921; border: none; border-radius: 20px; padding: 10px 32px; font-weight: 700; }
+    .perks { margin-bottom: 40px; }
+    .perks h2 { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 24px; }
+    .perks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .perk { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 24px; text-align: center; }
+    .perk .emoji { font-size: 32px; margin-bottom: 10px; }
+    .perk h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .perk p { font-size: 13px; color: #555; margin: 0; }
+    .openings h2 { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+    .job-card {
+        background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+        transition: box-shadow .2s;
+    }
+    .job-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+    .job-info h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .job-info .meta { font-size: 13px; color: #555; }
+    .job-info .meta span { margin-right: 16px; }
+    .job-card .btn { border-radius: 20px; font-size: 13px; flex-shrink: 0; }
+</style>
+
+<div class="careers-page">
+    <div class="careers-hero">
+        <h1>Build the Future with Us</h1>
+        <p>Join a team of builders, dreamers, and innovators shaping the future of e-commerce</p>
+        <a href="#openings" class="btn">View Open Positions</a>
+    </div>
+
+    <div class="perks">
+        <h2>Why Work at ShopVault?</h2>
+        <div class="perks-grid">
+            <div class="perk">
+                <div class="emoji">💰</div>
+                <h3>Competitive Pay</h3>
+                <p>Top-of-market compensation with equity and bonuses</p>
+            </div>
+            <div class="perk">
+                <div class="emoji">🏠</div>
+                <h3>Remote-First</h3>
+                <p>Work from anywhere — we have teammates in 30+ countries</p>
+            </div>
+            <div class="perk">
+                <div class="emoji">📚</div>
+                <h3>Growth Budget</h3>
+                <p>$5,000/year for courses, conferences, and learning</p>
+            </div>
+            <div class="perk">
+                <div class="emoji">🏥</div>
+                <h3>Full Benefits</h3>
+                <p>Health, dental, vision, and 401(k) matching</p>
+            </div>
+            <div class="perk">
+                <div class="emoji">🌴</div>
+                <h3>Unlimited PTO</h3>
+                <p>Take the time you need — we trust you</p>
+            </div>
+            <div class="perk">
+                <div class="emoji">🍕</div>
+                <h3>Team Events</h3>
+                <p>Quarterly off-sites, hackathons, and social events</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="openings" id="openings">
+        <h2>Open Positions</h2>
+        <div class="job-card">
+            <div class="job-info">
+                <h3>Senior Frontend Engineer</h3>
+                <div class="meta"><span>🏢 Engineering</span><span>📍 Remote</span><span>⏰ Full-time</span></div>
+            </div>
+            <a href="{% url 'core:careers' %}" class="btn btn-warning btn-sm">Apply →</a>
+        </div>
+        <div class="job-card">
+            <div class="job-info">
+                <h3>Product Designer</h3>
+                <div class="meta"><span>🏢 Design</span><span>📍 Remote</span><span>⏰ Full-time</span></div>
+            </div>
+            <a href="{% url 'core:careers' %}" class="btn btn-warning btn-sm">Apply →</a>
+        </div>
+        <div class="job-card">
+            <div class="job-info">
+                <h3>Data Scientist</h3>
+                <div class="meta"><span>🏢 Data</span><span>📍 New York / Remote</span><span>⏰ Full-time</span></div>
+            </div>
+            <a href="{% url 'core:careers' %}" class="btn btn-warning btn-sm">Apply →</a>
+        </div>
+        <div class="job-card">
+            <div class="job-info">
+                <h3>Customer Support Lead</h3>
+                <div class="meta"><span>🏢 Operations</span><span>📍 Lagos</span><span>⏰ Full-time</span></div>
+            </div>
+            <a href="{% url 'core:careers' %}" class="btn btn-warning btn-sm">Apply →</a>
+        </div>
+        <div class="job-card">
+            <div class="job-info">
+                <h3>Logistics Manager</h3>
+                <div class="meta"><span>🏢 Supply Chain</span><span>📍 London</span><span>⏰ Full-time</span></div>
+            </div>
+            <a href="{% url 'core:careers' %}" class="btn btn-warning btn-sm">Apply →</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

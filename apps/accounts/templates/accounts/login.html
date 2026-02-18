@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .auth-error { color: #d32f2f; font-size: 13px; margin-top: 4px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { font-weight: 700; font-size: 13px; margin-bottom: 4px; display: block; }
+    .form-group .form-text { font-size: 12px; color: #555; }
+</style>
+<div class="container mt-5" style="max-width: 400px;">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header bg-white text-center">
+            <h3>Sign-In</h3>
+        </div>
+        <div class="card-body">
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger py-2">
+                {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                <div class="form-group">
+                    <label for="id_username">Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <div class="auth-error">
+                        {% for error in form.username.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                    <div class="auth-error">
+                        {% for error in form.password.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-warning w-100 mt-3">Sign-In</button>
+            </form>
+            <div class="mt-3 text-center">
+                <small>New to ShopVault? <a href="{% url 'accounts:register' %}">Create your ShopVault account</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

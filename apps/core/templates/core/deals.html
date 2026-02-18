@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .deals-page { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    .deals-hero {
+        background: linear-gradient(135deg, #232f3e 0%, #131921 100%);
+        border-radius: 8px; padding: 30px 40px; margin-bottom: 24px; color: #fff;
+    }
+    .deals-hero h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .deals-hero p { color: #ddd; font-size: 14px; margin: 0; }
+    .deals-hero .badge-deal { background: #cc0c39; padding: 4px 12px; border-radius: 4px; font-size: 13px; font-weight: 700; display: inline-block; margin-bottom: 8px; }
+    .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .deal-card {
+        background: #fff; border-radius: 8px; padding: 16px; text-align: center;
+        border: 1px solid #ddd; transition: box-shadow .2s;
+    }
+    .deal-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+    .deal-card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 10px; }
+    .deal-card .title {
+        font-size: 14px; color: #0F1111; margin-bottom: 6px;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .deal-card .title a { color: #007185; text-decoration: none; }
+    .deal-card .title a:hover { color: #c7511f; text-decoration: underline; }
+    .deal-card .price { font-size: 20px; font-weight: 700; color: #0F1111; }
+    .deal-card .deal-tag { background: #cc0c39; color: #fff; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
+    .deal-card .stars { color: #de7921; font-size: 13px; margin-bottom: 4px; }
+</style>
+
+<div class="deals-page">
+    <div class="deals-hero">
+        <span class="badge-deal">🔥 LIMITED TIME</span>
+        <h1>Today's Deals</h1>
+        <p>Great deals, refreshed daily. Don't miss out on savings!</p>
+    </div>
+
+    <div class="deals-grid">
+        {% for product in products %}
+        <div class="deal-card">
+            <span class="deal-tag">Deal of the Day</span>
+            <a href="{% url 'core:product' product.pk %}">
+                <img src="{{ product.thumbnail|default:'https://via.placeholder.com/200' }}" alt="{{ product.title }}">
+            </a>
+            <div class="title"><a href="{% url 'core:product' product.pk %}">{{ product.title }}</a></div>
+            <div class="stars">
+                {% for s in "12345" %}{% if forloop.counter <= product.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+            </div>
+            <div class="price">${{ product.price }}</div>
+            <form method="POST" action="{% url 'cart:add' product.pk %}" class="mt-2">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn-warning btn-sm w-100" style="border-radius:20px;">Add to Cart</button>
+            </form>
+        </div>
+        {% empty %}
+        <p class="text-muted">No deals available right now. Check back soon!</p>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav style="display:flex;justify-content:center;margin-top:30px;">
+        <ul class="pagination">
+            {% if products.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">‹ Prev</a></li>
+            {% endif %}
+            {% for num in products.paginator.page_range %}
+                {% if products.number == num %}
+                <li class="page-item active"><span class="page-link" style="background:#FF9900;border-color:#FF9900;color:#fff;">{{ num }}</span></li>
+                {% elif num > products.number|add:"-3" and num < products.number|add:"3" %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next ›</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

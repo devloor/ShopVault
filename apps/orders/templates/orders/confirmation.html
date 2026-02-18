@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .confirm-container { max-width: 700px; margin: 40px auto; padding: 0 15px; }
+    .confirm-box { background: #f0f2f2; padding: 30px; border-radius: 8px; text-align: center; }
+    .confirm-box .checkmark { font-size: 60px; color: #007600; }
+    .confirm-box h2 { margin: 15px 0 5px; }
+    .order-details { text-align: left; margin-top: 25px; }
+    .order-details table { width: 100%; }
+    .order-details th { text-align: left; padding: 8px 0; border-bottom: 1px solid #ddd; }
+    .order-details td { padding: 8px 0; border-bottom: 1px solid #eee; }
+</style>
+
+<div class="confirm-container">
+    <div class="confirm-box">
+        <div class="checkmark">&#10003;</div>
+        <h2>Order placed, thank you!</h2>
+        <p class="text-muted">Order #{{ order.pk }} &middot; {{ order.created_at|date:"F j, Y" }}</p>
+
+        <div class="order-details">
+            <h5>Shipping to:</h5>
+            <p>{{ order.full_name }}<br>{{ order.address }}<br>{{ order.city }}, {{ order.postal_code }}</p>
+
+            <table>
+                <thead>
+                    <tr><th>Product</th><th>Qty</th><th style="text-align:right">Price</th></tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.product_title }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td style="text-align:right">${{ item.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="mt-3" style="text-align: right; font-size: 18px;">
+                <strong>Total: ${{ order.total_amount }}</strong>
+            </div>
+        </div>
+
+        <a href="{% url 'core:home' %}" class="btn btn-warning mt-4">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .cs-page { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+    .cs-hero { text-align: center; margin-bottom: 30px; }
+    .cs-hero h1 { font-size: 28px; font-weight: 400; color: #0F1111; }
+    .cs-hero p { color: #555; font-size: 15px; }
+    .cs-search {
+        max-width: 600px; margin: 20px auto; display: flex;
+        border: 2px solid #FF9900; border-radius: 8px; overflow: hidden;
+    }
+    .cs-search input { flex: 1; border: none; padding: 12px 16px; font-size: 15px; outline: none; }
+    .cs-search button { background: #FF9900; border: none; padding: 0 20px; cursor: pointer; color: #fff; font-weight: 600; }
+    .cs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 30px; }
+    .cs-card {
+        background: #fff; border: 1px solid #ddd; border-radius: 8px;
+        padding: 24px; text-align: center; transition: box-shadow .2s;
+    }
+    .cs-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+    .cs-card .icon { font-size: 36px; margin-bottom: 12px; }
+    .cs-card h3 { font-size: 16px; font-weight: 700; color: #0F1111; margin-bottom: 8px; }
+    .cs-card p { font-size: 13px; color: #555; margin: 0; }
+    .cs-contact {
+        background: #f0f2f2; border-radius: 8px; padding: 30px; text-align: center; margin-top: 40px;
+    }
+    .cs-contact h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .cs-contact p { color: #555; font-size: 14px; margin-bottom: 16px; }
+    .cs-contact .btn { border-radius: 20px; padding: 8px 28px; }
+</style>
+
+<div class="cs-page">
+    <div class="cs-hero">
+        <h1>👋 Hello, how can we help?</h1>
+        <p>Search our help articles or browse popular topics below</p>
+        <div class="cs-search">
+            <input type="text" placeholder="Search for help topics...">
+            <button type="button">Search</button>
+        </div>
+    </div>
+
+    <div class="cs-grid">
+        <div class="cs-card">
+            <div class="icon">📦</div>
+            <h3>Where's My Stuff?</h3>
+            <p>Track your packages, view delivery status, and manage shipments</p>
+        </div>
+        <div class="cs-card">
+            <div class="icon">↩️</div>
+            <h3>Returns & Refunds</h3>
+            <p>Return items, request refunds, and check return policies</p>
+        </div>
+        <div class="cs-card">
+            <div class="icon">💳</div>
+            <h3>Payment & Pricing</h3>
+            <p>Manage payment methods, check charges, and resolve billing issues</p>
+        </div>
+        <div class="cs-card">
+            <div class="icon">🔒</div>
+            <h3>Account Security</h3>
+            <p>Protect your account, update passwords, and manage login settings</p>
+        </div>
+        <div class="cs-card">
+            <div class="icon">🛒</div>
+            <h3>Orders & Cart</h3>
+            <p>Modify orders, cancel items, and resolve cart issues</p>
+        </div>
+        <div class="cs-card">
+            <div class="icon">⭐</div>
+            <h3>Reviews & Feedback</h3>
+            <p>Write reviews, report issues, and share your shopping experience</p>
+        </div>
+    </div>
+
+    <div class="cs-contact">
+        <h2>Still need help?</h2>
+        <p>Our customer service team is available 24/7</p>
+        <a href="mailto:support@shopvault.com" class="btn btn-warning">Contact Us</a>
+    </div>
+</div>
+{% endblock %}

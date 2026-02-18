@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .cart-container { max-width: 1000px; margin: 30px auto; padding: 0 15px; }
+    .cart-header { font-size: 28px; font-weight: 400; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+    .cart-item { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #eee; }
+    .cart-item img { width: 180px; height: 180px; object-fit: contain; cursor: pointer; }
+    .cart-item-details { flex: 1; }
+    .cart-item-title { font-size: 16px; color: #007185; margin-bottom: 5px; }
+    .cart-item-title a { color: #007185; text-decoration: none; }
+    .cart-item-title a:hover { color: #c7511f; text-decoration: underline; }
+    .cart-item-price { font-size: 18px; font-weight: 700; margin: 5px 0; }
+    .cart-item-unit { font-size: 13px; color: #555; }
+    .cart-item-stock { font-size: 12px; color: #007600; }
+    .cart-item-actions { margin-top: 10px; display: flex; gap: 10px; align-items: center; }
+    .cart-item-actions select { padding: 4px 8px; border: 1px solid #ddd; border-radius: 7px; background: #f0f2f2; }
+    .cart-subtotal { text-align: right; padding: 20px 0; font-size: 18px; }
+    .cart-subtotal span { font-weight: 700; }
+    .empty-cart { text-align: center; padding: 60px 0; }
+    .empty-cart h3 { margin-bottom: 15px; }
+</style>
+
+<div class="cart-container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <h1 class="cart-header">Shopping Cart</h1>
+
+    {% if items %}
+        {% for item in items %}
+        <div class="cart-item">
+            <a href="{% url 'core:product' item.product.pk %}">
+            {% if item.product.thumbnail %}
+                <img src="{{ item.product.thumbnail }}" alt="{{ item.product.title }}">
+            {% else %}
+                <img src="https://via.placeholder.com/180x180?text=No+Image" alt="{{ item.product.title }}">
+            {% endif %}
+            </a>
+            <div class="cart-item-details">
+                <div class="cart-item-title"><a href="{% url 'core:product' item.product.pk %}">{{ item.product.title }}</a></div>
+                <div class="cart-item-stock">In Stock</div>
+                <div class="cart-item-unit">${{ item.product.price }} each</div>
+                <div class="cart-item-price">${{ item.subtotal }}</div>
+                <div class="cart-item-actions">
+                    <form method="POST" action="{% url 'cart:update' item.pk %}">
+                        {% csrf_token %}
+                        <select name="quantity" onchange="this.form.submit()">
+                            {% for q in qty_range %}
+                            <option value="{{ q }}" {% if q == item.quantity %}selected{% endif %}>
+                                Qty: {{ q }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                    <form method="POST" action="{% url 'cart:remove' item.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link text-danger p-0" style="font-size:13px;">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="cart-subtotal">
+            Subtotal ({{ cart.total_items }} item{{ cart.total_items|pluralize }}): <span>${{ cart.total_price }}</span>
+        </div>
+
+        <div class="text-end mb-4">
+            <a href="{% url 'orders:checkout' %}" class="btn btn-warning btn-lg px-5">Proceed to checkout</a>
+        </div>
+    {% else %}
+        <div class="empty-cart">
+            <div style="font-size:64px;margin-bottom:12px;">🛒</div>
+            <h3>Your ShopVault Cart is empty</h3>
+            <p style="color:#555;font-size:14px;margin-bottom:16px;">Your shopping cart is waiting. Give it purpose — fill it with products!</p>
+            <a href="{% url 'core:home' %}" class="btn btn-warning">Continue Shopping</a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'core:wishlist' %}" class="btn btn-outline-secondary ms-2">View Wishlist</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

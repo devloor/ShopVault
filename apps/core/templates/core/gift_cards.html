@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .gc-page { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+    .gc-hero {
+        background: linear-gradient(135deg, #FF9900 0%, #ff6600 100%);
+        border-radius: 12px; padding: 50px 40px; text-align: center; color: #fff; margin-bottom: 30px;
+    }
+    .gc-hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+    .gc-hero p { font-size: 16px; opacity: .9; margin-bottom: 20px; }
+    .gc-hero .btn { background: #131921; color: #fff; border: none; border-radius: 20px; padding: 10px 32px; font-weight: 600; }
+    .gc-hero .btn:hover { background: #232f3e; }
+    .gc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-top: 30px; }
+    .gc-card {
+        background: #fff; border: 1px solid #ddd; border-radius: 12px;
+        overflow: hidden; text-align: center; transition: transform .2s, box-shadow .2s;
+    }
+    .gc-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+    .gc-card-img {
+        height: 160px; display: flex; align-items: center; justify-content: center;
+        font-size: 64px;
+    }
+    .gc-card-img.bg1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .gc-card-img.bg2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    .gc-card-img.bg3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+    .gc-card-img.bg4 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+    .gc-card-body { padding: 16px; }
+    .gc-card-body h3 { font-size: 16px; font-weight: 700; color: #0F1111; margin-bottom: 6px; }
+    .gc-card-body p { font-size: 13px; color: #555; margin-bottom: 12px; }
+    .gc-card-body .gc-amounts { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .gc-card-body .gc-amounts span {
+        border: 1px solid #ddd; border-radius: 16px; padding: 4px 14px;
+        font-size: 13px; font-weight: 600; cursor: pointer; transition: .2s;
+    }
+    .gc-card-body .gc-amounts span:hover { border-color: #FF9900; color: #FF9900; }
+    .gc-card-body .btn { border-radius: 20px; font-size: 13px; }
+    .gc-info { margin-top: 40px; }
+    .gc-info h2 { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+    .gc-info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .gc-info-item { text-align: center; padding: 20px; }
+    .gc-info-item .emoji { font-size: 32px; margin-bottom: 8px; }
+    .gc-info-item h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .gc-info-item p { font-size: 12px; color: #555; margin: 0; }
+</style>
+
+<div class="gc-page">
+    <div class="gc-hero">
+        <h1>🎁 ShopVault Gift Cards</h1>
+        <p>The perfect gift for every occasion. Let them choose what they love.</p>
+        <a href="{% url 'core:home' %}" class="btn">Shop Now</a>
+    </div>
+
+    <h2 style="font-size:22px;font-weight:700;">Choose a Gift Card</h2>
+    <div class="gc-grid">
+        <div class="gc-card">
+            <div class="gc-card-img bg1">🎂</div>
+            <div class="gc-card-body">
+                <h3>Birthday</h3>
+                <p>Make their day special</p>
+                <div class="gc-amounts">
+                    <span>$25</span><span>$50</span><span>$100</span>
+                </div>
+                <button class="btn btn-warning btn-sm w-100">Add to Cart</button>
+            </div>
+        </div>
+        <div class="gc-card">
+            <div class="gc-card-img bg2">💝</div>
+            <div class="gc-card-body">
+                <h3>Thank You</h3>
+                <p>Show your appreciation</p>
+                <div class="gc-amounts">
+                    <span>$25</span><span>$50</span><span>$100</span>
+                </div>
+                <button class="btn btn-warning btn-sm w-100">Add to Cart</button>
+            </div>
+        </div>
+        <div class="gc-card">
+            <div class="gc-card-img bg3">🎓</div>
+            <div class="gc-card-body">
+                <h3>Congratulations</h3>
+                <p>Celebrate achievements</p>
+                <div class="gc-amounts">
+                    <span>$25</span><span>$50</span><span>$100</span>
+                </div>
+                <button class="btn btn-warning btn-sm w-100">Add to Cart</button>
+            </div>
+        </div>
+        <div class="gc-card">
+            <div class="gc-card-img bg4">🎄</div>
+            <div class="gc-card-body">
+                <h3>Holiday</h3>
+                <p>Spread the joy</p>
+                <div class="gc-amounts">
+                    <span>$25</span><span>$50</span><span>$100</span>
+                </div>
+                <button class="btn btn-warning btn-sm w-100">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="gc-info">
+        <h2>How It Works</h2>
+        <div class="gc-info-grid">
+            <div class="gc-info-item">
+                <div class="emoji">🛒</div>
+                <h4>1. Choose Amount</h4>
+                <p>Pick from $25, $50, $100, or enter a custom amount</p>
+            </div>
+            <div class="gc-info-item">
+                <div class="emoji">📧</div>
+                <h4>2. Send It</h4>
+                <p>Deliver by email, text, or print a physical card</p>
+            </div>
+            <div class="gc-info-item">
+                <div class="emoji">🎉</div>
+                <h4>3. They Shop</h4>
+                <p>Recipients can shop millions of items on ShopVault</p>
+            </div>
+            <div class="gc-info-item">
+                <div class="emoji">♾️</div>
+                <h4>4. Never Expires</h4>
+                <p>ShopVault gift cards never expire and have no fees</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .about-page { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+    .about-hero {
+        background: linear-gradient(135deg, #232f3e, #37475a);
+        border-radius: 12px; padding: 60px 40px; text-align: center; color: #fff; margin-bottom: 40px;
+    }
+    .about-hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+    .about-hero p { font-size: 16px; color: #ccc; max-width: 600px; margin: 0 auto; }
+    .about-mission { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; align-items: center; }
+    .about-mission h2 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+    .about-mission p { color: #555; font-size: 15px; line-height: 1.7; }
+    .about-mission img { width: 100%; border-radius: 12px; }
+    .about-values { margin-bottom: 40px; }
+    .about-values h2 { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 24px; }
+    .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    .value-card {
+        background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 28px 20px; text-align: center;
+        transition: transform .2s;
+    }
+    .value-card:hover { transform: translateY(-4px); box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+    .value-card .icon { font-size: 36px; margin-bottom: 12px; }
+    .value-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .value-card p { font-size: 13px; color: #555; margin: 0; }
+    .about-stats {
+        background: #f7f8f8; border-radius: 12px; padding: 40px; text-align: center; margin-bottom: 40px;
+    }
+    .stats-grid { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    .stat-item .num { font-size: 32px; font-weight: 700; color: #FF9900; }
+    .stat-item .label { font-size: 14px; color: #555; }
+
+    @media (max-width: 768px) {
+        .about-mission { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="about-page">
+    <div class="about-hero">
+        <h1>About ShopVault</h1>
+        <p>We're on a mission to be Earth's most customer-centric marketplace — a place where people can find anything they want at great prices.</p>
+    </div>
+
+    <div class="about-mission">
+        <div>
+            <h2>Our Story</h2>
+            <p>Founded in 2024, ShopVault started with a simple idea: make online shopping seamless, secure, and delightful for everyone. What began as a small curated store has grown into a thriving marketplace connecting sellers and customers across the globe.</p>
+            <p>We believe everyone deserves access to quality products at fair prices, backed by world-class customer service and a commitment to fast, reliable delivery.</p>
+        </div>
+        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=500&h=350&fit=crop" alt="Our team">
+    </div>
+
+    <div class="about-values">
+        <h2>Our Values</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="icon">🎯</div>
+                <h3>Customer Obsession</h3>
+                <p>Every decision starts with the customer and works backward</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">🚀</div>
+                <h3>Innovation</h3>
+                <p>We constantly push the boundary of what's possible in e-commerce</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">🤝</div>
+                <h3>Trust</h3>
+                <p>We build trust through transparency, quality, and reliability</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">🌍</div>
+                <h3>Global Impact</h3>
+                <p>Empowering sellers and delighting buyers in 190+ countries</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="about-stats">
+        <h2 style="font-size:22px;font-weight:700;">ShopVault by the Numbers</h2>
+        <div class="stats-grid">
+            <div class="stat-item"><div class="num">300M+</div><div class="label">Active Customers</div></div>
+            <div class="stat-item"><div class="num">12M+</div><div class="label">Products</div></div>
+            <div class="stat-item"><div class="num">190+</div><div class="label">Countries</div></div>
+            <div class="stat-item"><div class="num">150K+</div><div class="label">Sellers</div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

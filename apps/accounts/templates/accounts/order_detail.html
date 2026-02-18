@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .od-page { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
+    .od-breadcrumb { font-size: 13px; margin-bottom: 12px; color: #555; }
+    .od-breadcrumb a { color: #007185; text-decoration: none; }
+    .od-breadcrumb a:hover { text-decoration: underline; }
+    .od-header { border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+    .od-header h1 { font-size: 24px; font-weight: 400; }
+    .od-status-bar {
+        display: flex; justify-content: space-between; align-items: center;
+        background: #f7f8f8; border-radius: 8px; padding: 16px 20px; margin-bottom: 20px;
+    }
+    .od-status-label { font-size: 13px; color: #555; }
+    .od-status-value { font-size: 15px; font-weight: 600; }
+    .od-section { margin-bottom: 24px; }
+    .od-section h5 { font-size: 16px; font-weight: 700; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .od-item { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+    .od-item:last-child { border-bottom: none; }
+    .od-item-img { width: 80px; height: 80px; object-fit: contain; background: #fff; border: 1px solid #eee; border-radius: 4px; }
+    .od-item-info { flex: 1; }
+    .od-item-title { font-size: 14px; color: #0F1111; }
+    .od-item-meta { font-size: 13px; color: #555; }
+    .od-item-price { font-weight: 700; font-size: 15px; text-align: right; }
+    .od-total { text-align: right; font-size: 18px; font-weight: 700; padding-top: 12px; border-top: 2px solid #ddd; }
+    .od-address { font-size: 14px; line-height: 1.6; }
+</style>
+
+<div class="od-page">
+    <div class="od-breadcrumb">
+        <a href="{% url 'core:home' %}">Home</a> › <a href="{% url 'accounts:dashboard' %}">Your Account</a> › <a href="{% url 'accounts:order_history' %}">Orders</a> › <span>Order #{{ order.pk }}</span>
+    </div>
+
+    <div class="od-header">
+        <h1>Order #{{ order.pk }}</h1>
+        <div style="font-size:13px;color:#555;">Placed {{ order.created_at|date:"F j, Y \a\t g:i A" }}</div>
+    </div>
+
+    <div class="od-status-bar">
+        <div>
+            <div class="od-status-label">Order Status</div>
+            <div class="od-status-value">
+                {% if order.status == 'delivered' %}
+                <span style="color:#007600;">✓ Delivered</span>
+                {% elif order.status == 'shipped' %}
+                <span style="color:#1976d2;">📦 Shipped</span>
+                {% elif order.status == 'processing' %}
+                <span style="color:#FF9900;">⏳ Processing</span>
+                {% elif order.status == 'cancelled' %}
+                <span style="color:#d32f2f;">✗ Cancelled</span>
+                {% else %}
+                <span style="color:#555;">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <div class="od-status-label">Order Total</div>
+            <div class="od-status-value">${{ order.total_amount }}</div>
+        </div>
+    </div>
+
+    <div class="od-section">
+        <h5>Items Ordered</h5>
+        {% for item in order.items.all %}
+        <div class="od-item">
+            {% if item.product and item.product.thumbnail %}
+            <img src="{{ item.product.thumbnail }}" class="od-item-img" alt="{{ item.product_title }}">
+            {% else %}
+            <img src="https://via.placeholder.com/80x80?text=📦" class="od-item-img" alt="">
+            {% endif %}
+            <div class="od-item-info">
+                <div class="od-item-title">
+                    {% if item.product %}
+                    <a href="{% url 'core:product' item.product.pk %}" style="color:#007185;text-decoration:none;">{{ item.product_title }}</a>
+                    {% else %}
+                    {{ item.product_title }}
+                    {% endif %}
+                </div>
+                <div class="od-item-meta">${{ item.price }} each · Qty: {{ item.quantity }}</div>
+            </div>
+            <div class="od-item-price">${{ item.subtotal }}</div>
+        </div>
+        {% endfor %}
+        <div class="od-total">Total: ${{ order.total_amount }}</div>
+    </div>
+
+    <div class="od-section">
+        <h5>Shipping Address</h5>
+        <div class="od-address">
+            {{ order.full_name }}<br>
+            {{ order.address }}<br>
+            {{ order.city }}, {{ order.postal_code }}<br>
+            {{ order.email }}
+        </div>
+    </div>
+
+    <div class="mt-3 mb-5">
+        <a href="{% url 'accounts:order_history' %}" class="btn btn-outline-secondary">&larr; All Orders</a>
+        <a href="{% url 'core:home' %}" class="btn btn-warning ms-2">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .legal-page { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
+    .legal-page h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: #0F1111; }
+    .legal-page .updated { font-size: 13px; color: #555; margin-bottom: 24px; }
+    .legal-page h2 { font-size: 18px; font-weight: 700; color: #0F1111; margin-top: 28px; margin-bottom: 8px; }
+    .legal-page p, .legal-page li { font-size: 14px; color: #333; line-height: 1.8; }
+    .legal-page ul { padding-left: 20px; }
+    .legal-page .toc { background: #f7f8f8; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+    .legal-page .toc a { display: block; color: #007185; text-decoration: none; font-size: 14px; line-height: 2; }
+    .legal-page .toc a:hover { color: #c7511f; text-decoration: underline; }
+</style>
+
+<div class="legal-page">
+    <h1>Conditions of Use</h1>
+    <p class="updated">Last updated: February 1, 2026</p>
+
+    <div class="toc">
+        <strong>Table of Contents</strong>
+        <a href="#welcome">1. Welcome</a>
+        <a href="#privacy">2. Privacy</a>
+        <a href="#account">3. Your Account</a>
+        <a href="#purchases">4. Purchases & Payments</a>
+        <a href="#ip">5. Intellectual Property</a>
+        <a href="#liability">6. Limitation of Liability</a>
+        <a href="#disputes">7. Disputes</a>
+    </div>
+
+    <h2 id="welcome">1. Welcome to ShopVault</h2>
+    <p>ShopVault provides its services to you subject to the following conditions. By accessing or using ShopVault, you agree to be bound by these conditions. Please read them carefully.</p>
+
+    <h2 id="privacy">2. Privacy</h2>
+    <p>Our Privacy Notice explains how we collect, use, and protect your personal information. By using our services, you consent to our data practices as described in the <a href="{% url 'core:privacy' %}">Privacy Notice</a>.</p>
+
+    <h2 id="account">3. Your Account</h2>
+    <p>You are responsible for maintaining the confidentiality of your account and password. You agree to:</p>
+    <ul>
+        <li>Provide accurate, current, and complete information during registration</li>
+        <li>Update your information to keep it accurate and current</li>
+        <li>Be responsible for all activity under your account</li>
+        <li>Notify us immediately of any unauthorized use</li>
+    </ul>
+
+    <h2 id="purchases">4. Purchases & Payments</h2>
+    <p>When you place an order, you are making an offer to purchase. We reserve the right to refuse or cancel orders at any time for reasons including product availability, errors in pricing, or suspected fraud.</p>
+    <ul>
+        <li>All prices are shown in USD unless otherwise stated</li>
+        <li>Payment is processed at the time of order placement</li>
+        <li>Applicable taxes are calculated at checkout</li>
+    </ul>
+
+    <h2 id="ip">5. Intellectual Property</h2>
+    <p>All content on ShopVault, including text, graphics, logos, images, and software, is the property of ShopVault or its content suppliers and is protected by international copyright laws.</p>
+
+    <h2 id="liability">6. Limitation of Liability</h2>
+    <p>ShopVault shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our services. Our total liability is limited to the amount you paid for the relevant product or service.</p>
+
+    <h2 id="disputes">7. Disputes</h2>
+    <p>Any dispute or claim relating to ShopVault shall be resolved through binding arbitration. You agree to waive the right to participate in a class action. Questions about these conditions should be directed to <a href="mailto:legal@shopvault.com">legal@shopvault.com</a>.</p>
+</div>
+{% endblock %}

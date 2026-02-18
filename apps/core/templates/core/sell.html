@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .sell-page { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+    .sell-hero {
+        background: linear-gradient(135deg, #232f3e 0%, #37475a 100%);
+        border-radius: 12px; padding: 60px 40px; text-align: center; color: #fff; margin-bottom: 40px;
+    }
+    .sell-hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+    .sell-hero p { font-size: 16px; color: #ccc; margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .sell-hero .btn-start { background: #FF9900; color: #131921; border: none; border-radius: 20px; padding: 12px 36px; font-weight: 700; font-size: 16px; }
+    .sell-hero .btn-start:hover { background: #e88a00; }
+    .sell-stats { display: flex; gap: 30px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+    .sell-stat { text-align: center; }
+    .sell-stat .num { font-size: 28px; font-weight: 700; color: #FF9900; }
+    .sell-stat .label { font-size: 13px; color: #ccc; }
+    .sell-steps { margin-top: 40px; }
+    .sell-steps h2 { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 24px; }
+    .sell-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+    .sell-step {
+        background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 28px 20px; text-align: center;
+        transition: transform .2s;
+    }
+    .sell-step:hover { transform: translateY(-4px); box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+    .sell-step .num-badge {
+        width: 40px; height: 40px; background: #FF9900; color: #fff; border-radius: 50%;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 18px; margin-bottom: 12px;
+    }
+    .sell-step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .sell-step p { font-size: 13px; color: #555; }
+    .sell-features { margin-top: 50px; }
+    .sell-features h2 { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 24px; }
+    .sell-feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .sell-feat {
+        display: flex; gap: 14px; align-items: flex-start; background: #f7f8f8;
+        border-radius: 8px; padding: 20px;
+    }
+    .sell-feat .emoji { font-size: 28px; flex-shrink: 0; }
+    .sell-feat h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .sell-feat p { font-size: 13px; color: #555; margin: 0; }
+    .sell-cta {
+        text-align: center; margin-top: 50px; padding: 40px; background: #fff3e0; border-radius: 12px;
+    }
+    .sell-cta h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .sell-cta p { color: #555; margin-bottom: 16px; }
+    .sell-cta .btn { background: #FF9900; color: #131921; border: none; border-radius: 20px; padding: 10px 32px; font-weight: 700; }
+
+    @media (max-width: 768px) {
+        .sell-feat-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="sell-page">
+    <div class="sell-hero">
+        <h1>Sell on ShopVault</h1>
+        <p>Reach millions of customers worldwide. Start selling today with low fees and powerful tools to grow your business.</p>
+        <a href="{% url 'accounts:register' %}" class="btn-start">Start Selling</a>
+        <div class="sell-stats">
+            <div class="sell-stat"><div class="num">300M+</div><div class="label">Active Customers</div></div>
+            <div class="sell-stat"><div class="num">190+</div><div class="label">Countries</div></div>
+            <div class="sell-stat"><div class="num">$3.5B</div><div class="label">Seller Revenue</div></div>
+        </div>
+    </div>
+
+    <div class="sell-steps">
+        <h2>How to Get Started</h2>
+        <div class="sell-steps-grid">
+            <div class="sell-step">
+                <span class="num-badge">1</span>
+                <h3>Create an Account</h3>
+                <p>Sign up for a seller account in minutes — it's free to get started</p>
+            </div>
+            <div class="sell-step">
+                <span class="num-badge">2</span>
+                <h3>List Your Products</h3>
+                <p>Add product details, images, and pricing. We'll help you through the process</p>
+            </div>
+            <div class="sell-step">
+                <span class="num-badge">3</span>
+                <h3>Ship & Fulfill</h3>
+                <p>Ship orders yourself or use ShopVault Fulfillment for hands-off logistics</p>
+            </div>
+            <div class="sell-step">
+                <span class="num-badge">4</span>
+                <h3>Get Paid</h3>
+                <p>Receive payments directly to your bank account every two weeks</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="sell-features">
+        <h2>Why Sell on ShopVault?</h2>
+        <div class="sell-feat-grid">
+            <div class="sell-feat">
+                <span class="emoji">🌍</span>
+                <div>
+                    <h4>Global Reach</h4>
+                    <p>Access hundreds of millions of customers across 190+ countries</p>
+                </div>
+            </div>
+            <div class="sell-feat">
+                <span class="emoji">📊</span>
+                <div>
+                    <h4>Powerful Analytics</h4>
+                    <p>Track sales, monitor trends, and optimize with real-time dashboards</p>
+                </div>
+            </div>
+            <div class="sell-feat">
+                <span class="emoji">🚀</span>
+                <div>
+                    <h4>Fast Fulfillment</h4>
+                    <p>Ship directly or use our fulfillment centers for 2-day delivery</p>
+                </div>
+            </div>
+            <div class="sell-feat">
+                <span class="emoji">💰</span>
+                <div>
+                    <h4>Low Fees</h4>
+                    <p>Competitive rates starting at just 8% per sale — no hidden costs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sell-cta">
+        <h2>Ready to grow your business?</h2>
+        <p>Join thousands of sellers already thriving on ShopVault</p>
+        <a href="{% url 'accounts:register' %}" class="btn">Create Seller Account</a>
+    </div>
+</div>
+{% endblock %}

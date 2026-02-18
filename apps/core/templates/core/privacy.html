@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .legal-page { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
+    .legal-page h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: #0F1111; }
+    .legal-page .updated { font-size: 13px; color: #555; margin-bottom: 24px; }
+    .legal-page h2 { font-size: 18px; font-weight: 700; color: #0F1111; margin-top: 28px; margin-bottom: 8px; }
+    .legal-page p, .legal-page li { font-size: 14px; color: #333; line-height: 1.8; }
+    .legal-page ul { padding-left: 20px; }
+    .legal-page .toc { background: #f7f8f8; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+    .legal-page .toc a { display: block; color: #007185; text-decoration: none; font-size: 14px; line-height: 2; }
+    .legal-page .toc a:hover { color: #c7511f; text-decoration: underline; }
+    .legal-page .highlight-box { background: #fff3cd; border-left: 4px solid #FF9900; padding: 16px; border-radius: 4px; margin: 16px 0; }
+</style>
+
+<div class="legal-page">
+    <h1>Privacy Notice</h1>
+    <p class="updated">Last updated: February 1, 2026</p>
+
+    <div class="highlight-box">
+        <strong>Your Privacy Matters.</strong> This notice explains how ShopVault collects, uses, and protects your personal data. We are committed to transparency and giving you control over your information.
+    </div>
+
+    <div class="toc">
+        <strong>Table of Contents</strong>
+        <a href="#collect">1. Information We Collect</a>
+        <a href="#use">2. How We Use Your Information</a>
+        <a href="#share">3. Information Sharing</a>
+        <a href="#cookies">4. Cookies & Tracking</a>
+        <a href="#security">5. Data Security</a>
+        <a href="#rights">6. Your Rights</a>
+        <a href="#contact">7. Contact Us</a>
+    </div>
+
+    <h2 id="collect">1. Information We Collect</h2>
+    <p>We collect information you provide directly, including:</p>
+    <ul>
+        <li><strong>Account Information:</strong> Name, email address, password</li>
+        <li><strong>Order Information:</strong> Shipping address, payment method, purchase history</li>
+        <li><strong>Communication:</strong> Reviews, customer service inquiries, feedback</li>
+    </ul>
+    <p>We also automatically collect:</p>
+    <ul>
+        <li>Device and browser information</li>
+        <li>IP address and general location</li>
+        <li>Pages visited and products viewed</li>
+        <li>Search queries within ShopVault</li>
+    </ul>
+
+    <h2 id="use">2. How We Use Your Information</h2>
+    <p>We use your information to:</p>
+    <ul>
+        <li>Process and deliver your orders</li>
+        <li>Provide customer support</li>
+        <li>Personalize your shopping experience</li>
+        <li>Send order updates and relevant communications</li>
+        <li>Prevent fraud and ensure security</li>
+        <li>Improve our services and develop new features</li>
+    </ul>
+
+    <h2 id="share">3. Information Sharing</h2>
+    <p>We do <strong>not</strong> sell your personal information. We may share information with:</p>
+    <ul>
+        <li><strong>Service Providers:</strong> Companies that help us deliver services (payment processors, shipping carriers)</li>
+        <li><strong>Sellers:</strong> Order details necessary to fulfill your purchases</li>
+        <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
+    </ul>
+
+    <h2 id="cookies">4. Cookies & Tracking</h2>
+    <p>We use cookies and similar technologies to remember your preferences, keep you logged in, and understand how you use ShopVault. You can manage cookie preferences through your browser settings.</p>
+
+    <h2 id="security">5. Data Security</h2>
+    <p>We implement industry-standard security measures including encryption, secure data storage, and regular security audits. While no system is completely secure, we work hard to protect your information.</p>
+
+    <h2 id="rights">6. Your Rights</h2>
+    <p>Depending on your location, you may have the right to:</p>
+    <ul>
+        <li>Access your personal data</li>
+        <li>Correct inaccurate information</li>
+        <li>Delete your account and data</li>
+        <li>Export your data in a portable format</li>
+        <li>Opt out of marketing communications</li>
+    </ul>
+
+    <h2 id="contact">7. Contact Us</h2>
+    <p>For privacy-related questions or requests, contact our Data Protection team at <a href="mailto:privacy@shopvault.com">privacy@shopvault.com</a>.</p>
+</div>
+{% endblock %}
