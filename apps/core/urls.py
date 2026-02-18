@@ -12,6 +12,12 @@ urlpatterns = [
     path('review/<int:pk>/delete/', views.delete_review, name='delete_review'),
     path('wishlist/', views.wishlist_view, name='wishlist'),
     path('wishlist/toggle/<int:pk>/', views.toggle_wishlist, name='toggle_wishlist'),
+    # Q&A
+    path('product/<int:pk>/question/', views.ask_question, name='ask_question'),
+    path('question/<int:question_pk>/answer/', views.answer_question, name='answer_question'),
+    # Admin analytics
+    path('staff/dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    # Static pages
     path('deals/', views.deals, name='deals'),
     path('customer-service/', views.customer_service, name='customer_service'),
     path('gift-cards/', views.gift_cards, name='gift_cards'),

@@ -190,6 +190,35 @@
 </div>
 {% endif %}
 
+<!-- ====== RECENTLY VIEWED ====== -->
+{% if recently_viewed %}
+<div class="sv-products">
+    <h3>Your Recently Viewed Items</h3>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3 mt-1">
+        {% for product in recently_viewed %}
+        <div class="col">
+            <div class="sv-prod">
+                <a href="{% url 'core:product' product.pk %}">
+                    <img src="{{ product.thumbnail|default:'https://via.placeholder.com/200' }}" alt="{{ product.title }}">
+                </a>
+                <div class="sv-prod-title"><a href="{% url 'core:product' product.pk %}">{{ product.title }}</a></div>
+                <div class="sv-prod-stars">
+                    {% for s in "12345" %}{% if forloop.counter <= product.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+                    <small style="color:#555;">{{ product.rating }}</small>
+                </div>
+                <div class="sv-prod-price">${{ product.price }}</div>
+                <form method="POST" action="{% url 'cart:add' product.pk %}" class="mt-1">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-warning btn-sm w-100">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
 <!-- ====== FOOTER ====== -->
 <div class="sv-footer-top">
     <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top</a>

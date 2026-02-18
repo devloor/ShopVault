@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .profile-container { max-width: 800px; margin: 30px auto; padding: 0 15px; }
+    .profile-header { border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 25px; }
+    .profile-header h2 { font-size: 28px; font-weight: 400; }
+    .profile-header a { font-size: 14px; color: #007185; text-decoration: none; }
+    .profile-header a:hover { text-decoration: underline; color: #c7511f; }
+    .profile-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 24px; }
+    .profile-card .form-label { font-weight: 600; font-size: 13px; color: #0F1111; }
+    .profile-card .btn-save {
+        background: #FFD814; border: 1px solid #FCD200; border-radius: 8px;
+        padding: 8px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .profile-card .btn-save:hover { background: #F7CA00; }
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <a href="{% url 'accounts:dashboard' %}">← Your Account</a>
+        <h2>Your Profile</h2>
+    </div>
+
+    <div class="profile-card">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">First Name</label>
+                    {{ form.first_name }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Last Name</label>
+                    {{ form.last_name }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    {{ form.email }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    {{ form.phone }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Bio</label>
+                    {{ form.bio }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Date of Birth</label>
+                    {{ form.date_of_birth }}
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

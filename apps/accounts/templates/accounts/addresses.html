@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .addr-container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .addr-header { border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+    .addr-header h2 { font-size: 28px; font-weight: 400; margin: 0; }
+    .addr-header a { font-size: 14px; color: #007185; text-decoration: none; }
+    .addr-header a:hover { text-decoration: underline; color: #c7511f; }
+    .addr-back { font-size: 14px; color: #007185; text-decoration: none; display: block; margin-bottom: 10px; }
+    .addr-back:hover { text-decoration: underline; color: #c7511f; }
+    .addr-card {
+        background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 16px;
+        position: relative;
+    }
+    .addr-card.default { border-color: #FF9900; border-width: 2px; }
+    .addr-label { font-weight: 700; font-size: 15px; color: #0F1111; }
+    .addr-default-badge {
+        display: inline-block; background: #FFF3CD; color: #856404; font-size: 11px;
+        padding: 2px 8px; border-radius: 4px; margin-left: 8px; font-weight: 600;
+    }
+    .addr-detail { font-size: 14px; color: #555; line-height: 1.6; margin-top: 6px; }
+    .addr-actions { margin-top: 12px; }
+    .addr-actions a, .addr-actions button {
+        font-size: 13px; color: #007185; text-decoration: none; background: none;
+        border: none; cursor: pointer; padding: 0; margin-right: 16px;
+    }
+    .addr-actions a:hover, .addr-actions button:hover { color: #c7511f; text-decoration: underline; }
+    .btn-add-addr {
+        background: #fff; border: 2px dashed #ccc; border-radius: 8px; padding: 30px;
+        text-align: center; display: block; text-decoration: none; color: #555;
+        font-size: 15px; transition: border-color .2s;
+    }
+    .btn-add-addr:hover { border-color: #007185; color: #007185; }
+    .btn-add-addr .plus { font-size: 32px; display: block; margin-bottom: 6px; color: #aaa; }
+    .empty-addr { text-align: center; padding: 60px 20px; }
+    .empty-addr .icon { font-size: 48px; margin-bottom: 12px; }
+</style>
+
+<div class="addr-container">
+    <a href="{% url 'accounts:dashboard' %}" class="addr-back">← Your Account</a>
+    <div class="addr-header">
+        <h2>Your Addresses</h2>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <a href="{% url 'accounts:address_create' %}" class="btn-add-addr h-100 d-flex flex-column align-items-center justify-content-center">
+                <span class="plus">＋</span>
+                Add Address
+            </a>
+        </div>
+        {% for addr in addresses %}
+        <div class="col-md-4">
+            <div class="addr-card {% if addr.is_default %}default{% endif %}">
+                <div>
+                    <span class="addr-label">{{ addr.label }}</span>
+                    {% if addr.is_default %}<span class="addr-default-badge">Default</span>{% endif %}
+                </div>
+                <div class="addr-detail">
+                    <strong>{{ addr.full_name }}</strong><br>
+                    {{ addr.street_address }}<br>
+                    {{ addr.city }}{% if addr.state %}, {{ addr.state }}{% endif %} {{ addr.postal_code }}<br>
+                    {{ addr.country }}
+                    {% if addr.phone %}<br>📞 {{ addr.phone }}{% endif %}
+                </div>
+                <div class="addr-actions">
+                    <a href="{% url 'accounts:address_edit' addr.pk %}">Edit</a>
+                    <form method="POST" action="{% url 'accounts:address_delete' addr.pk %}" class="d-inline"
+                          onsubmit="return confirm('Delete this address?')">
+                        {% csrf_token %}
+                        <button type="submit">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-md-8">
+            <div class="empty-addr">
+                <div class="icon">📍</div>
+                <h5>No saved addresses</h5>
+                <p style="color:#555; font-size:14px;">Add an address for faster checkout.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -155,3 +155,73 @@ class SafeLoginForm(AuthenticationForm):
         if dangerous.search(username):
             raise forms.ValidationError('Username contains invalid characters.')
         return username
+
+
+class UserProfileForm(forms.Form):
+    """Form for editing user profile information."""
+    first_name = forms.CharField(
+        max_length=30, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First name'}),
+    )
+    last_name = forms.CharField(
+        max_length=30, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last name'}),
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+    )
+    phone = forms.CharField(
+        max_length=20, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone number'}),
+    )
+    bio = forms.CharField(
+        max_length=500, required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Tell us about yourself', 'rows': 3}),
+    )
+    date_of_birth = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+    )
+
+
+class AddressForm(forms.Form):
+    """Form for creating/editing a saved address."""
+    label = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Home, Office'}),
+    )
+    full_name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full name'}),
+    )
+    phone = forms.CharField(
+        max_length=20, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone number'}),
+    )
+    street_address = forms.CharField(
+        max_length=500,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Street address', 'rows': 2}),
+    )
+    city = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}),
+    )
+    state = forms.CharField(
+        max_length=100, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State / Province'}),
+    )
+    postal_code = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Postal code'}),
+    )
+    country = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}),
+        initial='Nigeria',
+    )
+    is_default = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Set as default address',
+    )
+

@@ -30,6 +30,22 @@
             </div>
             {% endif %}
 
+            {% load socialaccount %}
+            <div class="mb-3 text-center">
+                <a href="{% provider_login_url 'google' %}" class="btn btn-outline-secondary w-100 mb-2">
+                    <span style="font-weight:600;">Sign up with Google</span>
+                </a>
+                <a href="{% provider_login_url 'github' %}" class="btn btn-outline-secondary w-100">
+                    <span style="font-weight:600;">Sign up with GitHub</span>
+                </a>
+            </div>
+
+            <div style="display:flex;align-items:center;margin:20px 0;">
+                <div style="flex:1;height:1px;background:#ddd;"></div>
+                <div style="padding:0 10px;font-size:12px;color:#777;">OR</div>
+                <div style="flex:1;height:1px;background:#ddd;"></div>
+            </div>
+
             <form method="POST" novalidate>
                 {% csrf_token %}
                 <div class="form-group">

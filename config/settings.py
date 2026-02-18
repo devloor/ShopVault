@@ -45,6 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    # Third party
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    # Local apps
     'apps.accounts',
     'apps.core',
     'apps.products',
@@ -60,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -136,9 +145,49 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Auth
 LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/accounts/dashboard/'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Django sites framework (required by allauth)
+SITE_ID = 1
+
+# Authentication backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Allauth config
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGOUT_ON_GET = False
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# Social Auth providers (credentials from .env)
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID', ''),
+            'secret': os.environ.get('GOOGLE_SECRET', ''),
+        },
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    },
+    'github': {
+        'APP': {
+            'client_id': os.environ.get('GITHUB_CLIENT_ID', ''),
+            'secret': os.environ.get('GITHUB_SECRET', ''),
+        },
+        'SCOPE': ['user:email'],
+    },
+}
+
+# Email — console backend for portfolio/demo (no real SMTP needed)
+EMAIL_BACKEND = 'django.core.mail.backends.console.ConsoleBackend'
 
 # =============================================================================
 # SECURITY SETTINGS

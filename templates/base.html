@@ -297,6 +297,12 @@
                     <span class="sv-nav-label">Returns</span>
                     <span class="sv-nav-value">& Orders</span>
                 </a>
+                {% if user.is_staff %}
+                <a href="{% url 'core:admin_dashboard' %}" class="sv-nav-item d-none d-lg-flex">
+                    <span class="sv-nav-label">Admin</span>
+                    <span class="sv-nav-value">Dashboard</span>
+                </a>
+                {% endif %}
                 {% endif %}
 
                 <!-- Cart -->

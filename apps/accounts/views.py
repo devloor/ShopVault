@@ -179,3 +179,127 @@ def password_change(request):
         form.fields[field_name].widget.attrs.update({'class': 'form-control'})
 
     return render(request, 'accounts/password_change.html', {'form': form})
+
+
+@login_required
+def profile_view(request):
+    """View and edit user profile."""
+    from .models import UserProfile
+    from .forms import UserProfileForm
+
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST)
+        if form.is_valid():
+            # Update User fields
+            request.user.first_name = form.cleaned_data['first_name']
+            request.user.last_name = form.cleaned_data['last_name']
+            request.user.email = form.cleaned_data['email']
+            request.user.save()
+            # Update Profile fields
+            profile.phone = form.cleaned_data['phone']
+            profile.bio = form.cleaned_data['bio']
+            profile.date_of_birth = form.cleaned_data['date_of_birth']
+            profile.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('accounts:profile')
+    else:
+        form = UserProfileForm(initial={
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'email': request.user.email,
+            'phone': profile.phone,
+            'bio': profile.bio,
+            'date_of_birth': profile.date_of_birth,
+        })
+
+    return render(request, 'accounts/profile.html', {'form': form, 'profile': profile})
+
+
+@login_required
+def address_list(request):
+    """List all saved addresses."""
+    from .models import Address
+    addresses = Address.objects.filter(user=request.user)
+    return render(request, 'accounts/addresses.html', {'addresses': addresses})
+
+
+@login_required
+def address_create(request):
+    """Create a new address."""
+    from .models import Address
+    from .forms import AddressForm
+
+    if request.method == 'POST':
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            Address.objects.create(
+                user=request.user,
+                label=form.cleaned_data['label'],
+                full_name=form.cleaned_data['full_name'],
+                phone=form.cleaned_data['phone'],
+                street_address=form.cleaned_data['street_address'],
+                city=form.cleaned_data['city'],
+                state=form.cleaned_data['state'],
+                postal_code=form.cleaned_data['postal_code'],
+                country=form.cleaned_data['country'],
+                is_default=form.cleaned_data['is_default'],
+            )
+            messages.success(request, 'Address added successfully.')
+            return redirect('accounts:addresses')
+    else:
+        form = AddressForm()
+
+    return render(request, 'accounts/address_form.html', {'form': form, 'title': 'Add New Address'})
+
+
+@login_required
+def address_edit(request, address_id):
+    """Edit existing address."""
+    from .models import Address
+    from .forms import AddressForm
+
+    address = get_object_or_404(Address, pk=address_id, user=request.user)
+
+    if request.method == 'POST':
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            address.label = form.cleaned_data['label']
+            address.full_name = form.cleaned_data['full_name']
+            address.phone = form.cleaned_data['phone']
+            address.street_address = form.cleaned_data['street_address']
+            address.city = form.cleaned_data['city']
+            address.state = form.cleaned_data['state']
+            address.postal_code = form.cleaned_data['postal_code']
+            address.country = form.cleaned_data['country']
+            address.is_default = form.cleaned_data['is_default']
+            address.save()
+            messages.success(request, 'Address updated successfully.')
+            return redirect('accounts:addresses')
+    else:
+        form = AddressForm(initial={
+            'label': address.label,
+            'full_name': address.full_name,
+            'phone': address.phone,
+            'street_address': address.street_address,
+            'city': address.city,
+            'state': address.state,
+            'postal_code': address.postal_code,
+            'country': address.country,
+            'is_default': address.is_default,
+        })
+
+    return render(request, 'accounts/address_form.html', {'form': form, 'title': 'Edit Address', 'address': address})
+
+
+@login_required
+@require_POST
+def address_delete(request, address_id):
+    """Delete an address."""
+    from .models import Address
+    address = get_object_or_404(Address, pk=address_id, user=request.user)
+    address.delete()
+    messages.success(request, 'Address deleted.')
+    return redirect('accounts:addresses')
+

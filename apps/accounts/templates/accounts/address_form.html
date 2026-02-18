@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .aform-container { max-width: 600px; margin: 30px auto; padding: 0 15px; }
+    .aform-header { border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 25px; }
+    .aform-header h2 { font-size: 24px; font-weight: 400; }
+    .aform-back { font-size: 14px; color: #007185; text-decoration: none; display: block; margin-bottom: 10px; }
+    .aform-back:hover { text-decoration: underline; color: #c7511f; }
+    .aform-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 24px; }
+    .aform-card .form-label { font-weight: 600; font-size: 13px; color: #0F1111; }
+    .btn-save-addr {
+        background: #FFD814; border: 1px solid #FCD200; border-radius: 8px;
+        padding: 8px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .btn-save-addr:hover { background: #F7CA00; }
+</style>
+
+<div class="aform-container">
+    <a href="{% url 'accounts:addresses' %}" class="aform-back">← Your Addresses</a>
+    <div class="aform-header">
+        <h2>{{ title }}</h2>
+    </div>
+
+    <div class="aform-card">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Label</label>
+                    {{ form.label }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    {{ form.full_name }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    {{ form.phone }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Street Address</label>
+                    {{ form.street_address }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">City</label>
+                    {{ form.city }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">State</label>
+                    {{ form.state }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Postal Code</label>
+                    {{ form.postal_code }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Country</label>
+                    {{ form.country }}
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        {{ form.is_default }}
+                        <label class="form-check-label" for="id_is_default">Set as default address</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn-save-addr">Save Address</button>
+                <a href="{% url 'accounts:addresses' %}" class="btn btn-link text-muted ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
