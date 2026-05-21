@@ -33,3 +33,13 @@ dist/
 build/
 *.egg-info/
 *.egg
+
+# Testing
+.pytest_cache/
+
+# Generated icons
+static/favicon.png
+static/apple-touch-icon.png
+
+# Node
+node_modules/

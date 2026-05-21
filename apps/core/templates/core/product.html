@@ -153,6 +153,22 @@
                 <h5>About this item</h5>
                 <p>{{ product.description }}</p>
             </div>
+            {% if product.short_description %}
+            <div class="pd-description">
+                <h5>Product summary</h5>
+                <p>{{ product.short_description }}</p>
+            </div>
+            {% endif %}
+            {% if product.feature_bullet_list %}
+            <div class="pd-description">
+                <h5>Key features</h5>
+                <ul style="padding-left:18px; margin:0; color:#333;">
+                    {% for bullet in product.feature_bullet_list %}
+                    <li style="margin-bottom:8px;">{{ bullet }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
         </div>
 
         <!-- Buy Box -->
@@ -208,6 +224,21 @@
                 {{ review_stats.avg|floatformat:1 }} out of 5 · {{ review_stats.count }} rating{{ review_stats.count|pluralize }}
             </div>
             {% endif %}
+        </div>
+
+        <div class="review-actions" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:18px;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#555;flex-wrap:wrap;">
+                <strong>Sort:</strong>
+                <a href="?review_sort=recent{% if min_rating %}&min_rating={{ min_rating }}{% endif %}" class="btn btn-sm btn-outline-secondary {% if review_sort == 'recent' %}active{% endif %}">Recent</a>
+                <a href="?review_sort=rating_high{% if min_rating %}&min_rating={{ min_rating }}{% endif %}" class="btn btn-sm btn-outline-secondary {% if review_sort == 'rating_high' %}active{% endif %}">Highest</a>
+                <a href="?review_sort=rating_low{% if min_rating %}&min_rating={{ min_rating }}{% endif %}" class="btn btn-sm btn-outline-secondary {% if review_sort == 'rating_low' %}active{% endif %}">Lowest</a>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#555;flex-wrap:wrap;">
+                <strong>Filter:</strong>
+                <a href="?review_sort={{ review_sort }}&min_rating=4" class="btn btn-sm btn-outline-secondary {% if min_rating == '4' %}active{% endif %}">4+ stars</a>
+                <a href="?review_sort={{ review_sort }}&min_rating=3" class="btn btn-sm btn-outline-secondary {% if min_rating == '3' %}active{% endif %}">3+ stars</a>
+                <a href="?review_sort={{ review_sort }}&min_rating=1" class="btn btn-sm btn-outline-secondary {% if min_rating == '1' %}active{% endif %}">All</a>
+            </div>
         </div>
 
         {% if reviews %}

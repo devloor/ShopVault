@@ -81,7 +81,7 @@
                 {% for cat in categories %}
                 <a href="?q={{ query }}&cat={{ cat.slug }}&sort={{ selected_sort }}&price_min={{ price_min }}&price_max={{ price_max }}"
                    class="filter-link {% if selected_category == cat.slug %}active{% endif %}" style="margin-left: 10px;">
-                    {{ cat.name }}
+                    {{ cat.name }} {% if cat.product_count is not None %}({{ cat.product_count }}){% endif %}
                 </a>
                 {% endfor %}
             </div>

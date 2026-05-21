@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
+from django.urls import reverse
 from django.utils.text import slugify
 
 
@@ -31,6 +32,15 @@ class Product(models.Model):
         max_length=2000,
         blank=True,
         help_text="Product description (max 2000 chars)"
+    )
+    short_description = models.CharField(
+        max_length=250,
+        blank=True,
+        help_text="Short product summary for listing previews"
+    )
+    feature_bullets = models.TextField(
+        blank=True,
+        help_text="One feature or specification per line."
     )
     price = models.DecimalField(
         max_digits=10,
@@ -76,6 +86,13 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('core:product', args=[self.pk])
+
+    @property
+    def feature_bullet_list(self):
+        return [line.strip() for line in self.feature_bullets.splitlines() if line.strip()]
 
     def update_rating(self):
         """Recalculate rating from reviews."""

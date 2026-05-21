@@ -84,6 +84,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.cart.context_processors.cart_count',
+                'apps.core.context_processors.global_categories',
             ],
         },
     },
@@ -138,6 +139,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files
 MEDIA_URL = '/media/'
@@ -160,10 +163,17 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Allauth config
+# Allauth config (Updated for deprecation warnings)
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = False
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_USERNAME_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED and ACCOUNT_EMAIL_REQUIRED are deprecated
+# Fields with '*' are required
+ACCOUNT_SIGNUP_FIELDS = [
+    "username*",
+    "email",
+    "password1*",
+    "password2*",
+]
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 

@@ -3,7 +3,8 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
+from django.http import JsonResponse
 from django.db.models import Q, Avg, Count, Sum, F
 from django.utils import timezone
 from datetime import timedelta
@@ -49,7 +50,21 @@ def product_detail(request, pk):
     related_products = Product.objects.filter(
         category=product.category
     ).exclude(pk=product.pk).order_by('-rating')[:4]
-    reviews = product.reviews.select_related('user').order_by('-created_at')
+
+    review_sort = request.GET.get('review_sort', 'recent')
+    min_rating = request.GET.get('min_rating', '')
+    reviews = product.reviews.select_related('user')
+
+    if min_rating.isdigit():
+        reviews = reviews.filter(rating__gte=int(min_rating))
+
+    if review_sort == 'rating_high':
+        reviews = reviews.order_by('-rating', '-created_at')
+    elif review_sort == 'rating_low':
+        reviews = reviews.order_by('rating', '-created_at')
+    else:
+        reviews = reviews.order_by('-created_at')
+
     review_stats = reviews.aggregate(
         avg=Avg('rating'),
         count=Count('id'),
@@ -66,7 +81,7 @@ def product_detail(request, pk):
     user_has_reviewed = False
     in_wishlist = False
     if request.user.is_authenticated:
-        user_review = reviews.filter(user=request.user).first()
+        user_review = product.reviews.filter(user=request.user).first()
         user_has_reviewed = user_review is not None
         in_wishlist = Wishlist.objects.filter(user=request.user, product=product).exists()
 
@@ -82,6 +97,8 @@ def product_detail(request, pk):
         'related_products': related_products,
         'reviews': reviews,
         'review_stats': review_stats,
+        'review_sort': review_sort,
+        'min_rating': min_rating,
         'user_review': user_review,
         'user_has_reviewed': user_has_reviewed,
         'in_wishlist': in_wishlist,
@@ -159,7 +176,7 @@ def search(request):
     paginator = Paginator(results, 20)
     page = request.GET.get('page')
     products = paginator.get_page(page)
-    categories = Category.objects.all()
+    categories = Category.objects.annotate(product_count=Count('products'))
 
     return render(request, 'core/search.html', {
         'products': products,
@@ -230,7 +247,35 @@ def toggle_wishlist(request, pk):
         messages.info(request, f'Removed "{product.title}" from your wishlist.')
     else:
         messages.success(request, f'Added "{product.title}" to your wishlist.')
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': True,
+            'in_wishlist': created,
+            'button_label': '♥ In Wishlist' if created else '♡ Add to Wishlist',
+            'message': ('Added' if created else 'Removed') + f' "{product.title}" from your wishlist.',
+        })
     return redirect(request.META.get('HTTP_REFERER', 'core:product'))
+
+
+@login_required
+@require_GET
+def search_suggestions(request):
+    query = request.GET.get('q', '').strip()
+    suggestions = []
+    if query:
+        matches = Product.objects.filter(
+            Q(title__icontains=query) | Q(brand__icontains=query)
+        ).order_by('-rating', 'title')[:8]
+        suggestions = [
+            {
+                'title': p.title,
+                'url': p.get_absolute_url(),
+                'brand': p.brand,
+                'price': str(p.price),
+            }
+            for p in matches
+        ]
+    return JsonResponse({'suggestions': suggestions})
 
 
 @login_required
